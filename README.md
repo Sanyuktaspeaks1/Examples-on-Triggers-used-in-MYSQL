@@ -30,6 +30,8 @@ CREATE TABLE book_logs (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 ```
+![image](https://github.com/user-attachments/assets/16310369-666d-4160-b7b1-f44261ca1283)
+
 ## Step 4: Create the Trigger for books Table
 Now, we will create a trigger that logs an entry in the book_logs table whenever a new book is inserted into the books table.
 ```diff
@@ -45,6 +47,7 @@ END$$
 
 DELIMITER ;
 ```
+![image](https://github.com/user-attachments/assets/9f2981ea-9a83-4811-a757-eff4ec37eb23)
 
 ## Step 5: Test the Trigger
 To test the trigger, insert a new book into the books table:
@@ -52,3 +55,5 @@ To test the trigger, insert a new book into the books table:
 INSERT INTO books (book_title, author)
 VALUES ('The Great Gatsby', 'F. Scott Fitzgerald');
 ```
+![image](https://github.com/user-attachments/assets/4e3d9c03-f2f8-4234-90ce-47e7acac3b45)
+
