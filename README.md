@@ -1,4 +1,5 @@
 # Examples-on-Triggers-used-in-MYSQL
+
 ##  The goal is to create a trigger that logs an entry whenever a new book is added to the books table.
 ```DIFF
 CREATE DATABASE librarydb;
@@ -57,6 +58,13 @@ VALUES ('The Great Gatsby', 'F. Scott Fitzgerald');
 ```
 ![image](https://github.com/user-attachments/assets/4e3d9c03-f2f8-4234-90ce-47e7acac3b45)
 
+```diff
+OLD: Used to reference the old values of a record before a DELETE or UPDATE operation.
+NEW: Used to reference the new values of a record after an UPDATE operation.
+CONCAT(): A function to concatenate multiple strings together.
+NOW(): Returns the current timestamp when the operation (insert, update, or delete) occurs.
+VALUES: Specifies the data to be inserted into a table.
+```
 ## AFTER UPDATE Trigger:
 This trigger logs a message when an existing book's details are updated (e.g., title or author)
 ```diff
