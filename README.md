@@ -57,3 +57,27 @@ VALUES ('The Great Gatsby', 'F. Scott Fitzgerald');
 ```
 ![image](https://github.com/user-attachments/assets/4e3d9c03-f2f8-4234-90ce-47e7acac3b45)
 
+## AFTER UPDATE Trigger:
+This trigger logs a message when an existing book's details are updated (e.g., title or author)
+```diff
+DELIMITER $$
+
+CREATE TRIGGER after_book_update
+AFTER UPDATE ON books
+FOR EACH ROW
+BEGIN
+    INSERT INTO book_logs (message, created_at)
+    VALUES (CONCAT('Book updated: ', NEW.book_title, ' by ', NEW.author, ' (ID: ', NEW.book_id, ')'), NOW());
+END$$
+
+DELIMITER ;
+```
+- Now I insert a new book and author
+![image](https://github.com/user-attachments/assets/2c368e73-ec6f-4002-a8e3-86a7f18ef700)
+- Now I change dd to dddd
+![image](https://github.com/user-attachments/assets/8de92a5c-3073-423b-8dcf-0a4f85eddd86)
+
+- In the books_log table now it should show you the information about the new insert and update
+  ![image](https://github.com/user-attachments/assets/b1009bad-307d-41db-a821-18db15c357e2)
+
+
