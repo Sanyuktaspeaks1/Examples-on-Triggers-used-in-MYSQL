@@ -72,12 +72,34 @@ END$$
 
 DELIMITER ;
 ```
+
+
 - Now I insert a new book and author
-![image](https://github.com/user-attachments/assets/2c368e73-ec6f-4002-a8e3-86a7f18ef700)
+- ![image](https://github.com/user-attachments/assets/2c368e73-ec6f-4002-a8e3-86a7f18ef700)
+
 - Now I change dd to dddd
-![image](https://github.com/user-attachments/assets/8de92a5c-3073-423b-8dcf-0a4f85eddd86)
+- ![image](https://github.com/user-attachments/assets/8de92a5c-3073-423b-8dcf-0a4f85eddd86)
 
 - In the books_log table now it should show you the information about the new insert and update
   ![image](https://github.com/user-attachments/assets/b1009bad-307d-41db-a821-18db15c357e2)
 
+## Now let`s create a trigger for Delete
+Original
+![image](https://github.com/user-attachments/assets/a0941bc9-1ec3-4079-a90a-5e1604e5fdc0)
+- Delete the last row now let`s write a tigger which will give us a message that something is deleted
+```diff
+DELIMITER $$
+
+CREATE TRIGGER after_book_delete
+AFTER DELETE ON books
+FOR EACH ROW
+BEGIN
+    INSERT INTO book_logs (message, created_at)
+    VALUES (CONCAT('Book deleted: ', OLD.book_title, ' by ', OLD.author, ' (ID: ', OLD.book_id, ')'), NOW());
+END$$
+
+DELIMITER ;
+```
+
+![image](https://github.com/user-attachments/assets/2be23b13-48dc-486e-ad8e-780361a31525)
 
