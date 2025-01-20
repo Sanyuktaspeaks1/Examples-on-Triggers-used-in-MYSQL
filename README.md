@@ -1,0 +1,1 @@
+# Examples-on-Triggers-used-in-MYSQL
