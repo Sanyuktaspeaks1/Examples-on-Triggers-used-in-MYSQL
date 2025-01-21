@@ -112,19 +112,5 @@ DELIMITER ;
 ![image](https://github.com/user-attachments/assets/2be23b13-48dc-486e-ad8e-780361a31525)
 
 
-## Database name: Organization-- Table name-staff
-![image](https://github.com/user-attachments/assets/1286f7a7-ff8d-4034-b4f3-bb27b5091241)
-- Let`s have a place where all the records get updated and you get to know if someone has tweaked your record
-```diff
-use organization;
-CREATE TABLE department_audit (
-    audit_id INT AUTO_INCREMENT PRIMARY KEY, -- Unique ID for each audit entry
-    staff_id INT,                            -- ID of the staff whose department changed
-    old_department_id INT,                   -- The previous department ID
-    new_department_id INT,                   -- The updated department ID
-    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP -- Timestamp of the change
-);
-```
-Now you have an empty table where we will reflect all the insert/update/delete changes we do to the staff table
-![image](https://github.com/user-attachments/assets/28e919c2-4f0f-4601-a2ac-097bfda1da49)
+
 
