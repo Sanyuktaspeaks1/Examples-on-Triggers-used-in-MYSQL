@@ -1,4 +1,6 @@
 # Examples-on-Triggers-used-in-MYSQL
+![image](https://github.com/user-attachments/assets/d8f2f4e3-f032-454c-9d63-e33629ab474d)
+
 
 ##  The goal is to create a trigger that logs an entry whenever a new book is added to the books table.
 ```DIFF
