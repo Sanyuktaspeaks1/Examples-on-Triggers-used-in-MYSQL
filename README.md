@@ -111,6 +111,119 @@ DELIMITER ;
 
 ![image](https://github.com/user-attachments/assets/2be23b13-48dc-486e-ad8e-780361a31525)
 
+## Example 2:
+```sql
+CREATE TABLE customers (
+    customer_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    drink VARCHAR(50),
+    order_time DATETIME
+);
+
+CREATE TABLE order_log (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    customer_id INT,
+    drink VARCHAR(50),
+    action_time DATETIME,
+    action VARCHAR(50)
+);
+```
+## Trigger
+```sql
+
+3. **Create the Log Trigger**  
+Add the trigger to log all orders:  
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_order
+AFTER INSERT
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_log (customer_id, drink, action_time, action)
+    VALUES (NEW.customer_id, NEW.drink, NOW(), 'Ordered');
+END;
+//
+
+DELIMITER ;
+```
+## To check
+```diff
+INSERT INTO orders (customer_id, drink, order_time)
+VALUES (1, 'Mystic Mocha', NOW());
+```
+Now see the log_order table
+```sql
+SELECT * FROM order_log;
+```
+## Add Multiple Orders
+```sql
+INSERT INTO orders (customer_id, drink, order_time)
+VALUES (2, 'Dragon Latte', NOW()), (3, 'Phoenix Frappuccino', NOW());
+
+SELECT * FROM order_log;
+```
+
+## Update trigger
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_update_order
+AFTER UPDATE
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_log (customer_id, drink, action_time, action)
+    VALUES (NEW.customer_id, NEW.drink, NOW(), 'Updated');
+END;
+//
+
+DELIMITER ;
+```
+
+To test it
+```sql
+-- Update an order
+UPDATE orders
+SET drink = 'Celestial Cappuccino'
+WHERE order_id = 1;
+
+-- Verify the log
+SELECT * FROM order_log;
+```
+
+## To test the Delete Trigger
+
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_delete_order
+AFTER DELETE
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_log (customer_id, drink, action_time, action)
+    VALUES (OLD.customer_id, OLD.drink, NOW(), 'Deleted');
+END;
+//
+
+DELIMITER ;
+```
+To test
+```sql
+-- Delete an order
+DELETE FROM orders
+WHERE order_id = 1;
+
+-- Verify the log
+SELECT * FROM order_log;
+```
 
 
 
