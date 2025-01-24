@@ -113,6 +113,56 @@ DELIMITER ;
 
 ![image](https://github.com/user-attachments/assets/2be23b13-48dc-486e-ad8e-780361a31525)
 
+
+# :zap: :zap: When and How to write BEFORE TRIGGER
+- In MySQL, BEFORE triggers are used when you want to execute some logic before an operation (like INSERT, UPDATE, or DELETE) occurs on a table. This is helpful for scenarios like:
+
+- Validating data before it is inserted/updated.
+- Automatically modifying data before it is written to the table.
+- Enforcing business rules before changes are applied.
+```sql
+CREATE DATABASE CompanyDB;
+USE CompanyDB;
+CREATE TABLE Employees (
+    EmployeeID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(100) NOT NULL,
+    Salary DECIMAL(10, 2) NOT NULL,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+:white_check_mark: Create a BEFORE INSERT Trigger
+- This trigger ensures that any new employee's salary is at least $3000. If not, it automatically adjusts the salary to $3000.
+```sql
+DELIMITER //
+
+CREATE TRIGGER BeforeInsertEmployee
+BEFORE INSERT ON Employees
+FOR EACH ROW
+BEGIN
+    IF NEW.Salary < 3000 THEN
+        SET NEW.Salary = 3000;
+    END IF;
+END;
+
+//
+
+DELIMITER ;
+```
+:rotating_light: Test the Trigger
+```sql
+INSERT INTO Employees (Name, Salary) VALUES ('Alice', 4000);
+SELECT * FROM Employees;
+```
+:rotating_light: Now enter a value less than 3000 and see it change to 3000
+```sql
+INSERT INTO Employees (Name, Salary) VALUES ('Bob', 2500);
+SELECT * FROM Employees;
+```
+![image](https://github.com/user-attachments/assets/a671ea11-c7e1-4554-9e38-f17049e5127b)
+
+
+
+
 ## Example 2:
 ```sql
 CREATE TABLE customers (
