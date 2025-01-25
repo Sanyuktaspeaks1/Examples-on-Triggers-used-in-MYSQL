@@ -188,7 +188,7 @@ CREATE TABLE order_log (
 ## Trigger
 ```sql
 
-3. **Create the Log Trigger**  
+3. Create the Log Trigger 
 Add the trigger to log all orders:  
 ```sql
 DELIMITER //
@@ -276,6 +276,132 @@ WHERE order_id = 1;
 -- Verify the log
 SELECT * FROM order_log;
 ```
+ ## :white_check_mark: Example 3 E-commerce Order Tracking
+![image](https://github.com/user-attachments/assets/b21f3965-c267-4762-959f-e9e43fb8ccaa)
+- Let`s create 3 tables any E-commerce might need
+- :alien: Users (name and email)
+- :money_with_wings: products ( product_name, price)
+- :package: orders (order_id ,user_id ,product_id ,order_time)
+- :heavy_minus_sign: A table which will capture order placement or order cancellelation 
 
+```sql
+-- Create Users Table
+CREATE TABLE users (
+    user_id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL
+);
+
+-- Create Products Table
+CREATE TABLE products (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+
+-- Create Orders Table
+CREATE TABLE orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    order_time DATETIME NOT NULL DEFAULT NOW(),
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+-- Create Order History Table
+CREATE TABLE order_history (
+    history_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    action_time DATETIME NOT NULL,
+    action VARCHAR(50) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(user_id),
+    FOREIGN KEY (product_id) REFERENCES products(product_id)
+);
+
+```
+:heavy_minus_sign: Trigger for Order Placement
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_order_placement
+AFTER INSERT
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_history (user_id, product_id, action_time, action)
+    VALUES (NEW.user_id, NEW.product_id, NOW(), 'Order Placed');
+END;
+//
+```
+:pushpin: Testing insert
+```sql
+-- Add users
+INSERT INTO users (username, email)
+VALUES ('Alice', 'alice@example.com'),
+       ('Bob', 'bob@example.com');
+
+-- Add products
+INSERT INTO products (product_name, price)
+VALUES ('Laptop', 999.99),
+       ('Smartphone', 699.99);
+SELECT * FROM order_history;
+
+```
+
+
+:heavy_minus_sign:  Trigger for Order Updates
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_order_update
+AFTER UPDATE
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_history (user_id, product_id, action_time, action)
+    VALUES (NEW.user_id, NEW.product_id, NOW(), 'Order Updated');
+END;
+//
+
+DELIMITER ;
+```
+:pushpin: Testing update
+```sql
+-- Update an order
+UPDATE orders
+SET product_id = 2
+WHERE order_id = 1;
+
+-- Check order history
+SELECT * FROM order_history;
+```
+
+:heavy_minus_sign: (Log Order Cancellations)
+```sql
+DELIMITER //
+
+CREATE TRIGGER log_order_delete
+AFTER DELETE
+ON orders
+FOR EACH ROW
+BEGIN
+    INSERT INTO order_history (user_id, product_id, action_time, action)
+    VALUES (OLD.user_id, OLD.product_id, NOW(), 'Order Cancelled');
+END;
+//
+
+DELIMITER ;
+```
+:pushpin: Testing order deletions
+```sql
+-- Delete an order
+DELETE FROM orders
+WHERE order_id = 2;
+
+-- Check order history
+SELECT * FROM order_history;
+```
 
 
